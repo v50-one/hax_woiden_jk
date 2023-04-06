@@ -1,5 +1,8 @@
 # hax_woiden_jk
 hax woiden 的库存监控(个人版)
+
+<details>
+<summary><code><strong>「 点击查看 Linux 系统下的使用示例 」</strong></code></summary>
 ****
 ## 配置文件填写教程
 ```
@@ -36,3 +39,4 @@ push_plus:
     - sms
 ```
 ****
+</details>
