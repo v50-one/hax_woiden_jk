@@ -3,12 +3,25 @@ hax woiden 的库存监控(个人版)
 
 <details>
   
-<summary><code><strong>「 点击查看 Linux 系统下的使用示例 」</strong></code></summary>
+<summary><code><strong>「 点击查看 配置文件填写教程 」</strong></code></summary>
+  
+  
+****
+  [![ppooBlQ.png](https://s1.ax1x.com/2023/04/06/ppooBlQ.png)](https://imgse.com/i/ppooBlQ)
+****
+  
+  
+</details>
+
+
+<details>
+  
+<summary><code><strong>「 点击查看 配置文件填写教程 」</strong></code></summary>
   
   
 ****
   
-  
+
 ## 配置文件填写教程
   
   
