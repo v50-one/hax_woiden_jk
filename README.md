@@ -3,10 +3,16 @@ hax woiden 的库存监控(个人版)
 
 <details>
   
-<summary><code><strong>「 点击查看 配置文件填写教程 」</strong></code></summary>
+<summary><code><strong>「 点击查看 邮件SMTP配置教程 」</strong></code></summary>
   
   
 ****
+  [![ppoIN24.png](https://s1.ax1x.com/2023/04/06/ppoIN24.png)](https://imgse.com/i/ppoIN24)
+  [![ppoIdM9.png](https://s1.ax1x.com/2023/04/06/ppoIdM9.png)](https://imgse.com/i/ppoIdM9)
+  [![ppoIsIK.png](https://s1.ax1x.com/2023/04/06/ppoIsIK.png)](https://imgse.com/i/ppoIsIK)
+  [![ppoI5Zt.png](https://s1.ax1x.com/2023/04/06/ppoI5Zt.png)](https://imgse.com/i/ppoI5Zt)
+  [![ppoIXss.png](https://s1.ax1x.com/2023/04/06/ppoIXss.png)](https://imgse.com/i/ppoIXss)
+  [![ppoIjLn.png](https://s1.ax1x.com/2023/04/06/ppoIjLn.png)](https://imgse.com/i/ppoIjLn)
   [![ppooBlQ.png](https://s1.ax1x.com/2023/04/06/ppooBlQ.png)](https://imgse.com/i/ppooBlQ)
 ****
   
