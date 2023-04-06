@@ -2,10 +2,17 @@
 hax woiden 的库存监控(个人版)
 
 <details>
+  
 <summary><code><strong>「 点击查看 Linux 系统下的使用示例 」</strong></code></summary>
+  
+  
 ****
+  
+  
 ## 配置文件填写教程
-```
+  
+  
+``` yaml
 #smtp邮件发送
 email:
 #smtp服务器
@@ -37,6 +44,11 @@ push_plus:
     - cp
 #短信
     - sms
+  
 ```
+  
+  
 ****
+  
+  
 </details>
