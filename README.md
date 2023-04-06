@@ -32,26 +32,33 @@ hax woiden 的库存监控(个人版)
   
   
 ``` yaml
-#smtp邮件发送
+#yaml配置文件格式提醒
+#1.冒号后面有空格
+#2.缩进不能用tab，只能用空格
+#3.-后面有空格
+#4.字符串不用加引号
+# yaml格式校验 https://www.bejson.com/validators/yaml_editor/
+#smtp邮件发送 email: 后面不填任何东西
 email:
 #smtp服务器
-  smtp: smtp.163.com #填写smtp服务器域名
+  smtp: smtp.163.com
 #smtp服务器端口
-  port: 25 #默认25 基本上不用更改
+  port: 25
 #发信邮箱
   from: 1@163.com
-#发信邮箱密码 非邮箱密码而是创建的smtp的密码一般叫授权码
-  key: 
-#收信邮箱 可以多个 
+#发信邮箱密码 非邮箱密码而是创建的smtp的密码
+  key: 1
+#收信邮箱 可以多个
   to:
    - 1@qq.com
    - 1@gmail.com
 # pushplus推送 官网 https://www.pushplus.plus/
 push_plus:
 #push_plus 你的token
-  token: 1
-#推送通道 需要用哪个通道就把哪个通道的注释取消了
-#通道名字不能更改
+  token: eed2d4c5b3f240b38a2d4e1f2c2fee7e
+#推送通道
+#不需要的通道可以注释掉 注释使用 # 开头
+# 全部通道被注释之后关闭pushplus推送
   channel:
 #mail 邮箱
     - mail
@@ -63,6 +70,9 @@ push_plus:
     - cp
 #短信
     - sms
+
+
+
   
 ```
   
