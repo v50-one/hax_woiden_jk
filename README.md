@@ -1,6 +1,7 @@
 # hax_woiden_jk
 hax woiden 的库存监控(个人版)
-##配置文件填写教程
+
+## 配置文件填写教程
 ```
 #smtp邮件发送
 email:
