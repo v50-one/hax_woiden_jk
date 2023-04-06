@@ -219,7 +219,6 @@ func main() {
 			for _, v := range Con.PushPlus.Channel {
 				Pushplus("WOIDEN"+w+time.Now().String()[0:19], v)
 			}
-			Email("2508339002@qq.com", "WOIDEN"+w, "WOIDEN"+w)
 			for _, v := range Con.Email.To {
 				if Email(v, "WOIDEN"+w, "WOIDEN"+w) {
 					fmt.Println(v + "发信成功")
