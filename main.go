@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/PuerkitoBio/goquery"
-	"io/ioutil"
+	"io"
 	"log"
 	"math/rand"
 	"net/http"
@@ -37,7 +37,7 @@ func Hax() string {
 	}
 	defer res.Body.Close()
 	if res.StatusCode != 200 {
-		fmt.Printf("HAX status code error: %d %s\n", res.StatusCode, res.Status)
+		fmt.Printf("\rHAX status code error: %d %s                         ", res.StatusCode, res.Status)
 		time.Sleep(5 * time.Second)
 	}
 
@@ -54,7 +54,7 @@ func Hax() string {
 			fmt.Println("HAX:" + s.Text() + time.Now().Format("2006-01-02 15:04:05"))
 		} else {
 			R = ""
-			fmt.Println("HAX" + s.Text() + time.Now().Format("2006-01-02 15:04:05"))
+			fmt.Print("\rHAX:" + s.Text() + time.Now().Format("2006-01-02 15:04:05") + "             ")
 			time.Sleep(time.Second)
 		}
 	})
@@ -82,7 +82,7 @@ func Woiden() string {
 	}
 	defer res.Body.Close()
 	if res.StatusCode != 200 {
-		fmt.Printf("woiden status code error: %d %s\n", res.StatusCode, res.Status)
+		fmt.Printf("\rwoiden status code error: %d %s                            ", res.StatusCode, res.Status)
 		time.Sleep(5 * time.Second)
 	}
 
@@ -99,7 +99,7 @@ func Woiden() string {
 			fmt.Println(s.Text() + time.Now().Format("2006-01-02 15:04:05"))
 		} else {
 			R = ""
-			fmt.Println("Woiden:" + s.Text() + time.Now().Format("2006-01-02 15:04:05"))
+			fmt.Print("\rWoiden:" + s.Text() + time.Now().Format("2006-01-02 15:04:05") + "       ")
 			time.Sleep(time.Second)
 		}
 	})
@@ -154,7 +154,7 @@ func Pushplus(c string, ch string) {
 	}
 	defer res.Body.Close()
 
-	body, err := ioutil.ReadAll(res.Body)
+	body, err := io.ReadAll(res.Body)
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -180,14 +180,85 @@ func Email(to string, title string, content string) bool {
 
 var Con config.Config
 var InitErr error
+var TZtime map[string]int64
 
+func RunHAX() {
+	h := Hax()
+	if h != "" {
+		fmt.Println("HAX " + h)
+		for _, v1 := range Con.Other.Concern {
+			if i := strings.Index(h, v1); i != -1 {
+				for _, v := range Con.PushPlus.Channel {
+					Pushplus("!HAX"+v1+h+time.Now().String()[0:19], v)
+				}
+				for _, v := range Con.Email.To {
+					if Email(v, "!HAX"+v1+h, "HAX"+h) {
+						fmt.Println(v + "发信成功")
+
+					} else {
+						fmt.Println(v + "发信失败")
+					}
+				}
+			}
+		}
+		if time.Now().Unix()-TZtime[h] > Con.Other.Time {
+			for _, v := range Con.PushPlus.Channel {
+				Pushplus("HAX"+h+time.Now().String()[0:19], v)
+			}
+			for _, v := range Con.Email.To {
+				if Email(v, "HAX"+h, "HAX"+h) {
+					fmt.Println(v + "发信成功")
+
+				} else {
+					fmt.Println(v + "发信失败")
+				}
+			}
+			TZtime[h] = time.Now().Unix()
+		}
+	}
+}
+func RunWoiden() {
+	w := Woiden()
+	if w != "" {
+		fmt.Println("WOIDEN " + w)
+		for _, v1 := range Con.Other.Concern {
+			if i := strings.Index(w, v1); i != -1 {
+				for _, v := range Con.PushPlus.Channel {
+					Pushplus("!WOIDEN"+v1+w+time.Now().String()[0:19], v)
+				}
+				for _, v := range Con.Email.To {
+					if Email(v, "!WOIDEN"+v1+w, "WOIDEN"+w) {
+						fmt.Println(v + "发信成功")
+					} else {
+						fmt.Println(v + "发信失败")
+					}
+				}
+			}
+		}
+		if time.Now().Unix()-TZtime[w] > Con.Other.Time {
+			for _, v := range Con.PushPlus.Channel {
+				Pushplus("WOIDEN"+w+time.Now().String()[0:19], v)
+			}
+			for _, v := range Con.Email.To {
+				if Email(v, "WOIDEN"+w, "WOIDEN"+w) {
+					fmt.Println(v + "发信成功")
+
+				} else {
+					fmt.Println(v + "发信失败")
+				}
+			}
+			TZtime[w] = time.Now().Unix()
+		}
+
+	}
+}
 func main() {
 	if InitErr = Con.ReadYaml(); InitErr != nil {
 		fmt.Println("config err")
 		return
 	}
 	for _, v := range Con.Email.To {
-		if Email(v, "抢鸡启动", "抢鸡启动") {
+		if Email(v, "监控启动成功", "监控启动成功") {
 			fmt.Println(v + "发信成功")
 		} else {
 			fmt.Println(v + "发信失败")
@@ -195,39 +266,12 @@ func main() {
 	}
 
 	for _, v := range Con.PushPlus.Channel {
-		Pushplus("抢鸡启动"+v, v)
+		Pushplus("监控启动成功"+v, v)
 	}
 	fmt.Println("请检查是否收到邮件和微信推送")
 	for {
-		h := Hax()
-		if h != "" {
-			fmt.Println("HAX " + h)
-			for _, v := range Con.PushPlus.Channel {
-				Pushplus("HAX"+h+time.Now().String()[0:19], v)
-			}
-			for _, v := range Con.Email.To {
-				if Email(v, "\"HAX\"+h", "HAX"+h) {
-					fmt.Println(v + "发信成功")
-				} else {
-					fmt.Println(v + "发信失败")
-				}
-			}
-		}
-		w := Woiden()
-		if w != "" {
-			fmt.Println("HAX " + w)
-			for _, v := range Con.PushPlus.Channel {
-				Pushplus("WOIDEN"+w+time.Now().String()[0:19], v)
-			}
-			for _, v := range Con.Email.To {
-				if Email(v, "WOIDEN"+w, "WOIDEN"+w) {
-					fmt.Println(v + "发信成功")
-				} else {
-					fmt.Println(v + "发信失败")
-				}
-			}
-
-		}
+		go RunWoiden()
+		go RunHAX()
 		time.Sleep(time.Second)
 	}
 }

@@ -17,6 +17,11 @@ type Config struct {
 		Token   string   `yaml:"token"`
 		Channel []string `yaml:"channel"`
 	} `yaml:"push_plus"`
+	Other struct {
+		Time    int64    `yaml:"time"`
+		Number  int      `yaml:"number"`
+		Concern []string `yaml:"concern"`
+	}
 }
 
 // ReadYaml 读取配置文件
