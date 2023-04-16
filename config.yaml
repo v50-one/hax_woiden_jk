@@ -31,8 +31,6 @@ push_plus:
 other:
   #提醒时间设置,同一机器提醒间隔
   time: 0
-  #同一机器提醒次数
-  number: 1
   #特别关注机器通知为自动暴力 监控为查询 如监控 US 那么只要包含US就会提醒
   concern:
     - US
