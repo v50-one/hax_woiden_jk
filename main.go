@@ -161,7 +161,7 @@ func Pushplus(c string, ch string) {
 	}
 	fmt.Println(string(body))
 }
-func Email(to string, title string, content string) bool {
+func Email(to string, title string, content string) error {
 	subject := fmt.Sprintf("Subject: %s\r\n", title)
 	send := fmt.Sprintf("From: %s 库存监控\r\n", Con.Email.From)
 	receiver := fmt.Sprintf("To: %s\r\n", to)
@@ -173,14 +173,21 @@ func Email(to string, title string, content string) bool {
 	var tos = []string{to}
 	err := smtp.SendMail(addr, auth, from, tos, msg)
 	if err != nil {
-		return false
+		return err
 	}
-	return true
+	return nil
 }
 
 var Con config.Config
-var InitErr error
-var TZtime map[string]int64
+
+type message struct {
+	text string
+	time time.Time
+}
+
+var (
+	lastMessages []message
+)
 
 func RunHAX() {
 	h := Hax()
@@ -192,31 +199,47 @@ func RunHAX() {
 					Pushplus("!HAX"+v1+h+time.Now().String()[0:19], v)
 				}
 				for _, v := range Con.Email.To {
-					if Email(v, "!HAX"+v1+h, "HAX"+h) {
+					if err := Email(v, "!HAX"+v1+h, "HAX"+h); err == nil {
 						fmt.Println(v + "发信成功")
 
 					} else {
 						fmt.Println(v + "发信失败")
+						fmt.Println("------------------------------------------------")
+						fmt.Println("错误原因:" + err.Error())
+						fmt.Println("------------------------------------------------")
 					}
 				}
 			}
 		}
-		if time.Now().Unix()-TZtime[h] > Con.Other.Time {
-			for _, v := range Con.PushPlus.Channel {
-				Pushplus("HAX"+h+time.Now().String()[0:19], v)
-			}
-			for _, v := range Con.Email.To {
-				if Email(v, "HAX"+h, "HAX"+h) {
-					fmt.Println(v + "发信成功")
-
-				} else {
-					fmt.Println(v + "发信失败")
+		for _, v := range lastMessages {
+			if v.text == h {
+				if time.Now().Unix()-v.time.Unix() < Con.Other.Time {
+					return
 				}
+				break
 			}
-			TZtime[h] = time.Now().Unix()
 		}
+		for _, v := range Con.PushPlus.Channel {
+			Pushplus("HAX"+h+time.Now().String()[0:19], v)
+		}
+		for _, v := range Con.Email.To {
+			if err := Email(v, "HAX"+h, "HAX"+h); err == nil {
+				fmt.Println(v + "发信成功")
+
+			} else {
+				fmt.Println(v + "发信失败")
+				fmt.Println("------------------------------------------------")
+				fmt.Println("错误原因:" + err.Error())
+				fmt.Println("------------------------------------------------")
+			}
+		}
+		lastMessages = append(lastMessages, message{
+			text: h,
+			time: time.Now(),
+		})
 	}
 }
+
 func RunWoiden() {
 	w := Woiden()
 	if w != "" {
@@ -227,41 +250,58 @@ func RunWoiden() {
 					Pushplus("!WOIDEN"+v1+w+time.Now().String()[0:19], v)
 				}
 				for _, v := range Con.Email.To {
-					if Email(v, "!WOIDEN"+v1+w, "WOIDEN"+w) {
+					if err := Email(v, "!WOIDEN"+v1+w, "WOIDEN"+w); err != nil {
 						fmt.Println(v + "发信成功")
 					} else {
 						fmt.Println(v + "发信失败")
+						fmt.Println("------------------------------------------------")
+						fmt.Println("错误原因:" + err.Error())
+						fmt.Println("------------------------------------------------")
 					}
 				}
 			}
 		}
-		if time.Now().Unix()-TZtime[w] > Con.Other.Time {
-			for _, v := range Con.PushPlus.Channel {
-				Pushplus("WOIDEN"+w+time.Now().String()[0:19], v)
-			}
-			for _, v := range Con.Email.To {
-				if Email(v, "WOIDEN"+w, "WOIDEN"+w) {
-					fmt.Println(v + "发信成功")
-
-				} else {
-					fmt.Println(v + "发信失败")
+		for _, v := range lastMessages {
+			if v.text == w {
+				if time.Now().Unix()-v.time.Unix() < Con.Other.Time {
+					return
 				}
+				break
 			}
-			TZtime[w] = time.Now().Unix()
 		}
+		for _, v := range Con.PushPlus.Channel {
+			Pushplus("WOIDEN"+w+time.Now().String()[0:19], v)
+		}
+		for _, v := range Con.Email.To {
+			if err := Email(v, "WOIDEN"+w, "WOIDEN"+w); err == nil {
+				fmt.Println(v + "发信成功")
 
+			} else {
+				fmt.Println(v + "发信失败")
+				fmt.Println("------------------------------------------------")
+				fmt.Println("错误原因:" + err.Error())
+				fmt.Println("------------------------------------------------")
+			}
+		}
+		lastMessages = append(lastMessages, message{
+			text: w,
+			time: time.Now(),
+		})
 	}
 }
 func main() {
-	if InitErr = Con.ReadYaml(); InitErr != nil {
+	if InitErr := Con.ReadYaml(); InitErr != nil {
 		fmt.Println("config err")
 		return
 	}
 	for _, v := range Con.Email.To {
-		if Email(v, "监控启动成功", "监控启动成功") {
+		if err := Email(v, "监控启动成功", "监控启动成功"); err == nil {
 			fmt.Println(v + "发信成功")
 		} else {
 			fmt.Println(v + "发信失败")
+			fmt.Println("------------------------------------------------")
+			fmt.Println("错误原因:" + err.Error())
+			fmt.Println("------------------------------------------------")
 		}
 	}
 
