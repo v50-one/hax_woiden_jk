@@ -19,7 +19,6 @@ type Config struct {
 	} `yaml:"push_plus"`
 	Other struct {
 		Time    int64    `yaml:"time"`
-		Number  int      `yaml:"number"`
 		Concern []string `yaml:"concern"`
 	}
 }
